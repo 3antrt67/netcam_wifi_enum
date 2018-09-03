@@ -20,8 +20,8 @@ class MetasploitModule < Msf::Auxiliary
       register_options(
           [ 
               Opt::RPORT(18881), 
-              OptString.new('USERNAME', [ false, 'Camera username' ]),
-              OptString.new('PASSWORD', [ false, 'Camera password' ]),
+              OptString.new('USERNAME', [ true, 'Camera username' ]),
+              OptString.new('PASSWORD', [ true, 'Camera password' ]),
           ])
     end
 
@@ -36,9 +36,16 @@ class MetasploitModule < Msf::Auxiliary
 
       if not req
         print_error("There has been no response received...")
-        return
-      
-      if req.code == 200
+      return
+      elsif req.code == 200
         print_good("Camera has responded successfully.")
+        print_status("#{req.headers}")
+        print_good("#{req.body}")
+        disconnect
+      elsif req.code == 200 and req.body == 'var result="Auth Failed"'
+        print_error("Incorrect Username/Password combination..")
+      else
+        print_error("Error has occurred.")
+      end
     end
 end
