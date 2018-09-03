@@ -19,14 +19,14 @@ class MetasploitModule < Msf::Auxiliary
       deregister_options('RHOST')
       register_options(
           [ 
-              Opt::RPORT(18881) 
+              Opt::RPORT(18881), 
               OptString.new('USERNAME', [ false, 'Camera username' ]),
-              OptString.new('PASSWORD', [ false, 'Camera password' ])           
+              OptString.new('PASSWORD', [ false, 'Camera password' ]),
           ])
     end
 
     def run
-      uri = "/get_params.cgi?&loginuse=" + USERNAME + "&loginpas=" + PASSWORD + "&user=" + USERNAME + "&pwd=" + PASSWORD + "&"
+      uri = '"/get_params.cgi?&loginuse=" + USERNAME + "&loginpas=" + PASSWORD + "&user=" + USERNAME + "&pwd=" + PASSWORD + "&"'
 
       print_status("Attempting enumeration...")
       req = send_request_cgi({
